@@ -1,14 +1,15 @@
 (function(root, factory){
 	if (typeof define === "function" && define.amd) {
 		define(["RNG"], function(a){
-			return (root.amdWebGlobal = factory(a));
-		});
+			return (root.amdWebGlobal = factory(a))
+		})
 	} else {
-		root.RNG = factory(root.RNG);
+		root.RNG = factory(root.RNG)
 	}
 }(typeof window !== "undefined" ? window : this, function(RNG){
 	
-	let abs = x => (x ^ (x >> 31)) - (x >> 31);
+	let abs = x => (x ^ (x >> 31)) - (x >> 31),
+		int = b => +(BigInt.asIntN(54, b)+"");
 
 	RNG = function(seed){
 		this.m = 0x80000000;
@@ -32,35 +33,36 @@
 							char = 37;
 						this.state += BigInt(char)*37n**BigInt(i)
 					}
-					this.state = +(BigInt.asIntN(54, this.state)+"");
-					break;
+					this.state = int(this.state);
+					break
 				}
 			default:
 				this.state = Math.floor(Date.now() * (this.m - 1))
 		}
 	}
 	RNG.prototype.nextInt = function(){
-		return this.state = abs((this.a * this.state + this.c) % this.m);
+		return this.state = abs(this.a * this.state + this.c) % this.m
 	}
 	RNG.prototype.nextSafeInt = function(allowNegatives){
 		let numStr = "";
 		for(let i = 0; i < 54; i++){
-			numStr += this.nextInt();
+			numStr += this.nextInt()
 		}
 		
-		return this.state = +(BigInt.asIntN(54, numStr)+"");
+		return this.state = int(numStr)
 	}
 	RNG.prototype.nextFloat = function(){
-		// returns in range [0,1]
-		return this.nextInt() / (this.m - 1);
+		// returns in range [0,1)
+		return this.nextInt() / (this.m - 1)
 	}
 	RNG.prototype.nextRange = function(start, end){
 		// returns in range [start, end): including start, excluding end
-		return start + Math.floor(this.nextInt() * (end - start) / this.m);
+		return start + Math.floor(this.nextInt() * (end - start) / this.m)
 	}
 	RNG.prototype.choice = function(array){
-		return array[this.nextRange(0, array.length)];
+		let arr = array instanceof Array && arguments.length == 1 ? array : arguments;
+		return arr[this.nextRange(0, arr.length)]
 	}
 
-	return RNG;
-}));
+	return RNG
+}))
