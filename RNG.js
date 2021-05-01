@@ -26,7 +26,7 @@ module.exports = (function(){
 								char -= 7;
 							if(char == -16)
 								char = 37;
-							this.#state += BigInt(char)*37n**BigInt(i)
+							state += BigInt(char)*37n**BigInt(i)
 						}
 						this.#state = RNG.#stateGenerator(+(BigInt.asIntN(54, state)+""));
 						break
@@ -45,7 +45,7 @@ module.exports = (function(){
 			for(let i = 0; i < 54; i++){
 				numStr += this.nextInt
 			}
-			return this.#state = +(BigInt.asIntN(54, numStr)+"")
+			return +(BigInt.asIntN(54, numStr)+"")
 		}
 
 		get nextFloat(){
