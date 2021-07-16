@@ -27,3 +27,31 @@ console.log(generator.nextSafeInt) // -3944918460362496
 console.log(generator.choice(1, "two", "3", true, {hello: "world"})) // "3"
 console.log(generator.nextRange(1, 10)) // 7
 ```
+
+## Possible seeds
+A seed can be in the form of a `number` or a `string`.
+
+```javascript
+let generator1 = new RNG(1234),
+    generator2 = new RNG("1234");
+```
+
+In the example above, both seeds are identical. However...
+
+```javascript
+let generator1 = new RNG(0x1234),
+    generator2 = new RNG("0x1234");
+```
+
+In this example, the seeds are different.
+
+By default, if the parameter is neither a `number` nor a `string`, the constructor will provide a seed based on `Date.now()`.
+
+When inputting a rational number, the decimal part will be ignored. So...
+
+```javascript
+let generator1 = new RNG(123),
+    generator2 = new RNG(123.456);
+```
+
+...are identical.
