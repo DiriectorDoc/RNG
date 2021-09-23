@@ -4,9 +4,8 @@ module.exports = class RNG {
 
 	static #stateGenerator = function*(state){
 		state |= 0;
-		while(true){
-			yield state = Math.abs(1103515245 * state + 12345) % 0x80000000
-		}
+		yield state = Math.abs(1103515245 * state + 12345) % 0x80000000;
+		while(true) yield state = (1103515245 * state + 12345) % 0x80000000;
 	}
 
 	constructor(seed){
@@ -27,7 +26,7 @@ module.exports = class RNG {
 							char = 37;
 						state += BigInt(char)*37n**BigInt(i)
 					}
-					this.#state = RNG.#stateGenerator(+(BigInt.asIntN(54, state)+""));
+					this.#state = RNG.#stateGenerator(Number(BigInt.asIntN(54, state)));
 					break
 				}
 			default:
@@ -44,7 +43,7 @@ module.exports = class RNG {
 		for(let i = 0; i < 54; i++){
 			numStr += this.nextInt
 		}
-		return +(BigInt.asIntN(54, numStr)+"")
+		return Number(BigInt.asIntN(54, numStr))
 	}
 
 	get nextFloat(){
@@ -54,11 +53,18 @@ module.exports = class RNG {
 
 	nextRange(start, end){
 		// returns in range [start, end): including start, excluding end
-		return start + (this.nextInt * (end - start) / 0x80000000)|0
+		return start + Math.trunc(this.nextInt * (end - start) / 0x80000000)
 	}
 
 	choice(array){
-		let arr = array instanceof Array && arguments.length == 1 ? array : arguments;
-		return arr[this.nextRange(0, arr.length)]
+		if(arguments.length == 1){
+			if(array instanceof Array){
+				return array[this.nextRange(0, array.length)]
+			} else {
+				(this.nextInt)
+				return array
+			}
+		}
+		return arguments[this.nextRange(0, arguments.length)]
 	}
 }
