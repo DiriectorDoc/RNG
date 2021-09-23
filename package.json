@@ -1,6 +1,6 @@
 {
   "name": "docs-rng",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Seeded random number generator",
   "main": "RNG.js",
   "scripts": {
